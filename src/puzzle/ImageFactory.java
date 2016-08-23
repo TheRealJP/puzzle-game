@@ -34,17 +34,13 @@ public final class ImageFactory {
 	 *            The reference to the image to use for the sprite
 	 * @return A sprite instance containing an accelerate image of the request
 	 *         reference
-	 * @throws SlickException
+	 * @throws InputStreamException
 	 */
 	public Image getSprite(String ref) {
-		// System.out.println(this.getClass().getClassLoader().getResourceAsStream(ref).toString());
-
-		// if we've already got the sprite in the cache
-		// then just return the existing version
 		if (images.get(ref) != null) {
 			return images.get(ref);
 		}
-		// create a sprite, add it the cache then return it
+		
 		Image image = new Image(this.getClass().getClassLoader().getResourceAsStream("images/" + ref));
 		images.put(ref, image);
 

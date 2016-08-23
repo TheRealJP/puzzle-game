@@ -31,18 +31,23 @@ public class Main extends Application {
 		ImageView pets = new ImageView(ImageFactory.get().getSprite("pets.jpg"));
 
 		for (ImageView image : Arrays.asList(beach, pets)) {
-			image.setFitWidth(400);
-			image.setFitHeight(200);
+			image.setPreserveRatio(true);
+			image.setFitWidth(vbox.getWidth());
+			image.setFitHeight(vbox.getHeight());
+			image.setStyle("-fx-border-color:darkblue ; \n" // #090a0c
+					+ "-fx-border-insets:3;\n" + "-fx-border-radius:7;\n" + "-fx-border-width:1.0");
 		}
 
 		vbox.getChildren().addAll(beach, pets);
+		vbox.setStyle("-fx-border-color:darkblue ; \n" // #090a0c
+				+ "-fx-border-insets:3;\n" + "-fx-border-radius:7;\n" + "-fx-border-width:1.0");
 		return vbox;
 	}
 
 	/** Populates the application with content using a {@link BorderPane}. Th */
 	private BorderPane createBorders() {
 		BorderPane border = new BorderPane();
-		
+
 		border.setCenter(getImageViews());
 		root.getChildren().add(border);
 		return border;
