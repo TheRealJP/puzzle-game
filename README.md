@@ -1,2 +1,2 @@
-# puzzle-game
-Sliding Puzzle Game using JavaFX
+# Sliding Puzzle Game
+A sliding Puzzle Game made with JavaFX
