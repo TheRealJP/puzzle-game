@@ -1,36 +1,69 @@
-package puzzle;
+package game.puzzle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
 public class Puzzle extends Canvas {
 
-	public List<PuzzlePiece> pieces = new ArrayList<PuzzlePiece>();
-	private ImageView image;
+	/** The image of the completed puzzle. */
+	private Image image;
+	/** The row and column size of the puzzle used to create the game grid. */
 	private int size;
 
-	public Puzzle(ImageView image, int size) {
+	/**
+	 * The puzzle mapping containing all pieces of the puzzle and their absolute
+	 * positions.
+	 * <li>The {@code PuzzlePiece} images are created by segmenting the
+	 * completed puzzle into a square grid.
+	 * <li>The absolute position of a {@code PuzzlePiece} is the position of the
+	 * piece which completes the puzzle and creates the desired image.
+	 */
+	private Map<PuzzlePiece, Position> pieces;
+
+	public Puzzle(Image image, int size) {
 		this.image = image;
-		pieces = createPuzzle(size);
+		this.pieces = new HashMap<PuzzlePiece, Position>(size);
+		createPuzzle(image, size);
 	}
 
-	private final List<PuzzlePiece> createPuzzle(int rows) {
-		List<PuzzlePiece> pieces = new ArrayList<PuzzlePiece>(rows);
+	/** Creates a {@code size x size} puzzle of the provided image. */
+	private void createPuzzle(Image image, int size) {
+		// Reads the pixels of the image to be segmented.
+		PixelReader reader = image.getPixelReader();
+		// Width of each puzzle piece
+		int width = (int) image.getWidth() / size;
+		// Height of each puzzle piece
+		int height = (int) image.getHeight() / size;
 
-		for (int x = 0; x < rows; x++) {
-			for (int y = 0; y < rows; y++) {
-				pieces.add(new PuzzlePiece(new Position(x + 120, y + 120)));
-				image.setViewport(new Rectangle2D(x, y, rows, rows));
+		// The pieces image
+		WritableImage image_writer = new WritableImage(width, height);
+		// Appends pixels to the image_writer
+		PixelWriter pixel_writer = image_writer.getPixelWriter();
+
+		for (int piece_count = 0; piece_count < pieces.size(); piece_count++) {
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+
+					// Appends each pixel to the writer to create the new image.
+					int color = reader.getArgb(x, y);
+					pixel_writer.setArgb(x, y, color);
+				}
 			}
+
+			// Create new puzzle piece
+			Position position = new Position(width * piece_count, height * piece_count);
+			PuzzlePiece piece = new PuzzlePiece(image_writer);
+			pieces.put(piece, position);
+
 		}
-		return pieces;
 	}
 
 	public void displayPieces() {
-		this.getGraphicsContext2D().drawImage(image.getImage(), this.getWidth() / 2, this.getHeight() / 2, size, size);
 	}
 }
