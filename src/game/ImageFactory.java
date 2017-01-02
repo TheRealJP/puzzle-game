@@ -1,4 +1,4 @@
-package puzzle;
+package game;
 
 import java.util.HashMap;
 
@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 
 /**
  * The ImageFactory loads and caches all of the stock images for use in the
- * puzzle game.
+ * game game.
  * 
  * @author Juan Ortiz
  * @since 8/17/2016
